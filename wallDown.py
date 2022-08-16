@@ -12,26 +12,28 @@ def wal_down(query):
         all_url.append(data['path'])
     
     name = ''
-    i=1
     for img_url in all_url:
-        print('Using URL: ', img_url)
-        name = f'{i}' + os.path.splitext(img_url)[1]
-        print('File name will be: ', name)
-        #urllib.request.urlretrieve(f'{url}', name)
-        img_res = requests.get(img_url)
-        img = Image.open(BytesIO(img_res.content))
-        img.show()
-        i+=1
+        user_res = input("View Wallpaper/ Next Wallpaper(y/n): ")
+        if(user_res == 'y'):
+            print('Using URL: ', img_url)
+            name = 'wallhaven_wallpaper' + os.path.splitext(img_url)[1]
+            img_res = requests.get(img_url)
+            img = Image.open(BytesIO(img_res.content))
+            img.show()
+            down = input("Download this wallpaper: ")
+            if(down == 'y'):
+                down_wallpaper(img_url, name)
+        else:
+            break
 
 
-#all_url = wal_down('cyberpunk')
-#print('Available Url are: ')
-#for url in all_url:
-    #print(url)
-    #img = Image.open(BytesIO(url))
-    #img.show()
-    #path = urllib.parse.urlparse(url).path
-    #print(os.path.splitext(path)[0], " ", os.path.splitext(path)[1])
+def down_wallpaper(url, filename):
+    print(f'Downloading {url}... with filename {filename}')
+    res = requests.get(url)
+    username = os.getlogin()
+    down_path = f'/home/{username}/Downloads/{filename}'
+    print(down_path)
+    open(down_path, 'wb').write(res.content)
 
 
 query = input('Enter your wallpaper style: ')
